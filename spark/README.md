@@ -2,19 +2,6 @@
 
 ## Getting Started ##
 
-1. [Download Apache Spark](https://spark.apache.org/downloads.html)
-    * Choose a Spark release: `2.4.5 (Feb 05 2020)`
-    * Choose a package type: `Pre-built for Apache Hadoop 2.7`
-    * Download Spark: `spark-2.4.5-bin-hadoop2.7.tgz`
-    
-   ```bash
-   SPARK_URL='https://downloads.apache.org/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz'
-   SPARK_FILE="${SPARK_URL##*/}"
-   SPARK_DIR="${SPARK_FILE%\.*}"
-   wget ${SPARK_URL}
-   tar xf ${SPARK_FILE}
-   ```
-
 1. Install prerequisites
 
    ```bash
@@ -26,6 +13,28 @@
    
    # Optional
    sudo update-alternatives --config java
+   ```
+
+1. [Install Spark](https://spark.apache.org/downloads.html).  It can
+   be downloaded and installed as binaries:
+    * Choose a Spark release: `2.4.5 (Feb 05 2020)`
+    * Choose a package type: `Pre-built for Apache Hadoop 2.7`
+    * Download Spark: `spark-2.4.5-bin-hadoop2.7.tgz`
+    
+   ```bash
+   SPARK_URL='http://archive.apache.org/dist/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz'
+   SPARK_FILE="${SPARK_URL##*/}"
+   SPARK_DIR="${SPARK_FILE%\.*}"
+   wget ${SPARK_URL}
+   tar xf ${SPARK_FILE}
+   ```
+
+   Or installed from PyPI as [PySpark]():
+
+   ```bash
+   sudo apt install -y python3-pip
+   pip3 install pyspark
+   pyspark
    ```
 
 1. Run Spark shell:
@@ -54,19 +63,15 @@
     * Spark shell in Python
 
       ```bash
+      # If Spark is installed as binaries, then
       sudo ln -s /usr/bin/python3 /usr/bin/python  # Optional
       cd ${SPARK_DIR}
       ./bin/pyspark
-      ```
-
-    * Spark shell in Python PySpark package
-
-      ```bash
-      sudo apt install -y python3-pip
-      pip3 install pyspark
+      
+      # If Spark is installed as PySpark from PyPI, then
       pyspark
       ```
-      
+
       ```pycon
       >>> x = spark.read.text('README.md')
       >>> x
