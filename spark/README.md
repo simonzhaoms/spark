@@ -2,6 +2,8 @@
 
 ## Getting Started ##
 
+### Installation ###
+
 1. Install prerequisites
 
    ```bash
@@ -15,75 +17,76 @@
    sudo update-alternatives --config java
    ```
 
-1. [Install Spark](https://spark.apache.org/downloads.html).  It can
-   be downloaded and installed as binaries:
-    * Choose a Spark release: `2.4.5 (Feb 05 2020)`
-    * Choose a package type: `Pre-built for Apache Hadoop 2.7`
-    * Download Spark: `spark-2.4.5-bin-hadoop2.7.tgz`
+1. [Install Spark](https://spark.apache.org/downloads.html).
+    * It can be downloaded and installed as binaries:
+        + Choose a Spark release: `2.4.5 (Feb 05 2020)`
+        + Choose a package type: `Pre-built for Apache Hadoop 2.7`
+        + Download Spark: `spark-2.4.5-bin-hadoop2.7.tgz`
     
-   ```bash
-   SPARK_URL='http://archive.apache.org/dist/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz'
-   SPARK_FILE="${SPARK_URL##*/}"
-   SPARK_DIR="${SPARK_FILE%\.*}"
-   wget ${SPARK_URL}
-   tar xf ${SPARK_FILE}
-   ```
-
-   Or installed from PyPI as [PySpark]():
-
-   ```bash
-   sudo apt install -y python3-pip
-   pip3 install pyspark
-   pyspark
-   ```
-
-1. Run Spark shell:
-
-    * Spark shell in Scala
-
       ```bash
-      cd ${SPARK_DIR}
-      ./bin/spark-shell
-      ```
-      
-      ```scala
-      scala> val x = spark.read.textFile("README.md")
-      x: org.apache.spark.sql.Dataset[String] = [value: string]
-      
-      scala> x.count()
-      res0: Long = 104
-      
-      scala> x.first()
-      res2: String = # Apache Spark
-      
-      scala> val y = x.filter(line => line.contains("Spark"))
-      y: org.apache.spark.sql.Dataset[String] = [value: string]
+      SPARK_URL='http://archive.apache.org/dist/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz'
+      SPARK_FILE="${SPARK_URL##*/}"
+      SPARK_DIR="${SPARK_FILE%\.*}"
+      wget ${SPARK_URL}
+      tar xf ${SPARK_FILE}
       ```
 
-    * Spark shell in Python
+    * Or installed from PyPI as
+      [PySpark](https://pypi.org/project/pyspark/):
 
       ```bash
-      # If Spark is installed as binaries, then
-      sudo ln -s /usr/bin/python3 /usr/bin/python  # Optional
-      cd ${SPARK_DIR}
-      ./bin/pyspark
-      
-      # If Spark is installed as PySpark from PyPI, then
+      sudo apt install -y python3-pip
+      pip3 install pyspark
       pyspark
       ```
 
-      ```pycon
-      >>> x = spark.read.text('README.md')
-      >>> x
-      DataFrame[value: string]
-      >>> x.count()
-      104
-      >>> x.first()
-      Row(value='# Apache Spark')
-      >>> y = x.filter(x.value.contains('spark'))
-      >>> y
-      DataFrame[value: string]
-      ```
+### Run Spark Interactively ###
+
+* Spark shell in Scala
+
+  ```bash
+  cd ${SPARK_DIR}
+  ./bin/spark-shell
+  ```
+  
+  ```scala
+  scala> val x = spark.read.textFile("README.md")
+  x: org.apache.spark.sql.Dataset[String] = [value: string]
+  
+  scala> x.count()
+  res0: Long = 104
+  
+  scala> x.first()
+  res2: String = # Apache Spark
+  
+  scala> val y = x.filter(line => line.contains("Spark"))
+  y: org.apache.spark.sql.Dataset[String] = [value: string]
+  ```
+
+* Spark shell in Python
+
+  ```bash
+  # If Spark is installed as binaries, then
+  sudo ln -s /usr/bin/python3 /usr/bin/python  # Optional
+  cd ${SPARK_DIR}
+  ./bin/pyspark
+  
+  # If Spark is installed as PySpark from PyPI, then
+  pyspark
+  ```
+
+  ```pycon
+  >>> x = spark.read.text('README.md')
+  >>> x
+  DataFrame[value: string]
+  >>> x.count()
+  104
+  >>> x.first()
+  Row(value='# Apache Spark')
+  >>> y = x.filter(x.value.contains('spark'))
+  >>> y
+  DataFrame[value: string]
+  ```
 
 
 ## Reference ##
