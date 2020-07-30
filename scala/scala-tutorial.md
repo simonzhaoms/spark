@@ -1,4 +1,9 @@
-# [Scala Tutorial]((https://www.scala-exercises.org/scala_tutorial/)) #
+# [Notes on Scala Tutorial]((https://www.scala-exercises.org/scala_tutorial/)) #
+
+See [Basic Scala Interactive
+Interpreter](env.md#basic-scala-interactive-interpreter) for basic
+installation.
+
 
 ## Terms and Types ##
 
@@ -160,7 +165,9 @@ val res38: Int = 9
 
 Scala programs are written in `.scala` files, and organized in
 packages by putting the `.scala` file into the same physical directory
-as package's qualified path name and using a package clause:
+as package's qualified path name and using a `package` clause at the
+top of Scala source file.  And `def` and `val` definitions must be put
+into a top-level `object` definition:
 
 ```scala
 // file: foo/Bar.scala
@@ -183,10 +190,17 @@ object Quux {
 package foo
 import quux.Quux
 object Baz {
+    // Bar is visible within Baz, since Bar and Baz are in the same package - foo
     val a = Bar.func(2)
+    
+    // Quux must be imported, since Quux is not in the same package as Baz
     val b = Quux.func(3)
 }
 ```
+
+All members of package `scala`, `java.lang`, `scala, Predef` are
+automatically imported in any Scala program, thus they are not
+required to be imported manually.
 
 Scala executable application program should contain a `main` method:
 
@@ -195,3 +209,85 @@ object Hello {
     def main(args: Array[String]) = println("hello")
 }
 ```
+
+
+## Structuring Information ##
+
+```scala
+scala> sealed trait Color  // Sealed trait that has several alternatives
+trait Color
+
+scala> case object Red extends Color  // Alternatives of a sealed trait 
+object Red
+
+scala> case object Yellow extends Color
+object Yellow
+
+scala> case object Blue extends Color
+object Blue
+
+scala> case class Square(side: Int, color: Color)  // Case class, is like enum in C
+class Square
+
+scala> case class Circle(radius: Int, color: Color)
+class Circle
+
+scala> sealed trait Shape
+trait Shape
+
+scala> case class Square(side: Int, color: Color) extends Shape  // Case class alternatives of a sealed trait
+class Square
+
+scala> case class Circle(radius: Int, color: Color) extends Shape
+class Circle
+
+scala> val a: Shape = Square(4, Red)
+val a: Shape = Square(4,Red)
+
+scala> val b: Shape = Circle(9, Yellow)
+val b: Shape = Circle(9,Yellow)
+
+scala> val a2: Shape = Square(4, Red)
+val a2: Shape = Square(4,Red)
+
+scala> a == a2  // Comparison between case classes is done on their component values
+val res3: Boolean = true
+
+scala> a == b
+val res4: Boolean = false
+
+scala> def area(x: Shape): Double = 
+     |   x match {  // pattern matching
+     |     case Square(side, color) => side * side
+     |     case Circle(radius, color) => 3.14159 * radius * radius
+     |   }
+         x match {
+         ^
+On line 2: warning: match may not be exhaustive.
+       It would fail on the following inputs: Circle(_, _), Square(_, _)
+def area(x: Shape): Double
+
+scala> area(a)
+val res1: Double = 16.0
+
+scala> area(b)
+val res2: Double = 254.46879
+```
+
+## Higher Order Functions ##
+
+Functions that take other functions as parameters or that return
+functions as results are called **higher order functions**.
+
+The type of a function that takes `n` arguments of types `A1` to `An`
+and returns a result of type `B` can be expressed as `(A1, ..., An) =>
+B`.
+
+```scala
+
+```
+
+
+## Reference ##
+
+* [Scala Tutorial](https://www.scala-exercises.org/scala_tutorial/)

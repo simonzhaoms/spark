@@ -1,7 +1,7 @@
 # Scala #
 
 * [Environment Setup](./env.md)
-* [Scala Tutorial](./scala-tutorial.md)
+* [Notes on Scala Tutorial](./scala-tutorial.md)
 
 
 ## Reference ##
