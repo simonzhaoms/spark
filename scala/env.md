@@ -2,6 +2,11 @@
 
 ## Prerequisites ##
 
+**TODO**: Now Scala and Spark support Java 11.  See [JDK
+Compatibility](https://docs.scala-lang.org/overviews/jdk-compatibility/overview.html)
+and [Spark Release
+3.0.0](https://spark.apache.org/releases/spark-release-3-0-0.html)
+
 * Java 8: Scala runs on JVM
 
   1. Install [SDKMAN](https://sdkman.io/): A SDK manager like Conda
