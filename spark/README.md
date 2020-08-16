@@ -3,6 +3,9 @@
 * [Installation](#installation)
 * [Run Spark Interactively](#run-spark-interactively)
 * [Run Spark on Cluster](#run-spark-on-cluster)
+    + [Run Spark Application in Batch Mode](#run-spark-application-in-batch-mode)
+    + [Run Spark Application Interactively](#run-spark-application-interactively)
+    + [Setup Spark's Own Standalone Cluster](#setup-sparks-own-standalone-cluster)
 * [Spark Configuration](#spark-configuration)
 * [Reference](#reference)
 
@@ -140,7 +143,7 @@ mode) of the cluster.  Supported cluster types are Spark's own
 standalone cluster manager, Mesos, YARN and Kubernetes.
 
 
-### Run Spark Application in a Batch Mode ###
+### Run Spark Application in Batch Mode ###
 
 An Spark application can be
 [submitted](https://spark.apache.org/docs/latest/submitting-applications.html)
@@ -192,7 +195,7 @@ To run an interactive Spark shell on a cluster:
   ```
 
 
-### Setup Spark Standalone Cluster ###
+### Setup Spark's Own Standalone Cluster ###
 
 Besides running Spark locally with multiple threads, we can also run
 Spark on a [Spark standalone
