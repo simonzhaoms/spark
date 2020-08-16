@@ -136,14 +136,18 @@ Spark applications run as independent sets of processes on a cluster,
 coordinated by the `SparkContext` object in their driver program and
 executed by the executors run on worker nodes.  A driver program can
 be launched inside (cluster deploy mode) or outside (client deploy
-mode) of the cluster.
+mode) of the cluster.  Supported cluster types are Spark's own
+standalone cluster manager, Mesos, YARN and Kubernetes.
+
+
+### Run Spark Application in a Batch Mode ###
 
 An Spark application can be
 [submitted](https://spark.apache.org/docs/latest/submitting-applications.html)
-by the `"${SPARK_DIR}"/bin/spark-submit` script, then `SparkContext`
-in the driver program first connects [cluster
+in a batch mode by the `"${SPARK_DIR}"/bin/spark-submit` script, then
+`SparkContext` in the driver program first connects [cluster
 manager](https://spark.apache.org/docs/latest/cluster-overview.html#cluster-manager-types)
-(such as Spark's own standalone cluster manager, Mesos, YARN,
+(such as Spark's own standalone cluster manager, Mesos, YARN, or
 Kubernetes) to acquires executors on nodes in the cluster, then sends
 application code and schedule tasks to the executors to run:
 
@@ -170,14 +174,25 @@ where
     + `mesos://HOST:PORT`: Connect to the given Mesos cluser.
 * `<maven-coordinates>`: A comma-delimited list of Maven coordinates.
 
-To run an interactive Spark shell against the cluster:
 
-```bash
-"${SPARK_DIR}"/bin/spark-shell --master <cluster-master-url>
+### Run Spark Application Interactively ###
 
-# Or
-"${SPARK_DIR}"/bin/pyspark --master <cluster-master-url>
-```
+To run an interactive Spark shell on a cluster:
+* Scala
+
+  ```bash
+  "${SPARK_DIR}"/bin/spark-shell --master <cluster-master-url>
+
+  ```
+
+* Python
+
+  ```bash
+  "${SPARK_DIR}"/bin/pyspark --master <cluster-master-url>
+  ```
+
+
+### Setup Spark Standalone Cluster ###
 
 Besides running Spark locally with multiple threads, we can also run
 Spark on a [Spark standalone
