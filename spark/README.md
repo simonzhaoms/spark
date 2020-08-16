@@ -32,13 +32,13 @@
           and the 'Programming Language' section on
           [PyPI](https://pypi.org/project/pyspark/).
           
-          ```bash
-          sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
-          
-          # By default, Spark will find 'python' in the PATH
-          ln -s /usr/bin/python3 ~/.local/bin/python
-          ```
+       ```bash
+       sudo apt-get update
+       sudo apt-get install -y python3
+       
+       # By default, Spark will find 'python' in the PATH
+       ln -s /usr/bin/python3 ~/.local/bin/python
+       ```
 
 1. Install Spark
     * It can be downloaded and installed as binaries:
@@ -65,7 +65,6 @@
       ```bash
       sudo apt install -y python3-pip
       pip3 install pyspark
-      pyspark
       ```
 
     * See [PySpark Notes](pyspark.md) for more about the differences
@@ -96,16 +95,19 @@
   ```
 
 * Spark shell in Python
+    + If Spark is installed as binaries, then
 
-  ```bash
-  # If Spark is installed as binaries, then
-  sudo ln -s /usr/bin/python3 /usr/bin/python  # Optional
-  cd "${SPARK_DIR}"
-  "${SPARK_DIR}"/bin/pyspark
-  
-  # If Spark is installed as PySpark from PyPI, then
-  pyspark
-  ```
+      ```bash
+      sudo ln -s /usr/bin/python3 ~/.local/bin/python  # Optional
+      cd "${SPARK_DIR}"
+      "${SPARK_DIR}"/bin/pyspark
+      ```
+
+    + If Spark is installed as PySpark from PyPI, then
+
+      ```bash
+      pyspark
+      ```
 
   ```pycon
   >>> x = spark.read.text('README.md')
@@ -119,6 +121,7 @@
   >>> y
   DataFrame[value: string]
   ```
+
 
 ## Run Spark on Cluster ##
 
