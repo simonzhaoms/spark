@@ -242,7 +242,7 @@ where
 If the Spark application is written in Python and PySpark is
 pip-installed, then it can be also run with the Python interpreter.
 **NOTE** The cluster needs to be configured properly in the Python
-code
+code.
 
 ```bash
 python xxx.py
@@ -313,3 +313,5 @@ set in the `conf/spark-env.sh` file, such as `JAVA_HOME` and
     + [Building Spark](http://spark.apache.org/docs/latest/building-spark.html)
     + [Contributing to Spark](https://spark.apache.org/contributing.html)
     + [Useful Developer Tools](https://spark.apache.org/developer-tools.html)
+* Testing
+    * [Testing PySpark Code](https://mungingdata.com/pyspark/testing-pytest-chispa/)
