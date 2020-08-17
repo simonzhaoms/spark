@@ -1,10 +1,10 @@
 # Spark #
 
 * [Installation](#installation)
+* [Quickstart](#quickstart)
 * [Run Spark Interactively](#run-spark-interactively)
 * [Run Spark on Cluster](#run-spark-on-cluster)
     + [Run Spark Application in Batch Mode](#run-spark-application-in-batch-mode)
-    + [Run Spark Application Interactively](#run-spark-application-interactively)
     + [Setup Spark's Own Standalone Cluster](#setup-sparks-own-standalone-cluster)
 * [Spark Configuration](#spark-configuration)
 * [Reference](#reference)
@@ -74,16 +74,61 @@
       between PySpark and Spark.
 
 
+## Quickstart ##
+
+```bash
+cat << EOF > test.py
+from pyspark.sql import SparkSession
+
+file = './spark/README.md'
+spark = SparkSession.builder.appName('Test').getOrCreate()
+text = spark.read.text(file).cache()
+print(text.count())
+spark.stop()
+EOF
+
+python test.py
+```
+
+Output:
+
+```
+20/08/17 08:41:14 WARN Utils: Your hostname, pdbionic resolves to a loopback address: 127.0.1.1; using 10.211.55.62 instead (on interface enp0s5)
+20/08/17 08:41:14 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+20/08/17 08:41:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+104
+```
+
+
 ## Run Spark Interactively ##
 
-* Spark shell in Scala
+When Spark is run interactively, an instance of `SparkContext` and
+`SparkSession` are automatically created by Spark.  They are called
+`sc` and `spark`, respectively.
 
-  ```bash
-  cd "${SPARK_DIR}"
-  "${SPARK_DIR}"/bin/spark-shell
-  ```
-  
+* Spark shell in Scala
+    + Run without a cluster
+
+      ```bash
+      bash "${SPARK_DIR}"/bin/spark-shell
+      ```
+
+    + Or run on a cluster
+
+      ```bash
+      bash "${SPARK_DIR}"/bin/spark-shell --master <cluster-master-url>
+      ```
+
   ```scala
+  scala> sc
+  res0: org.apache.spark.SparkContext = org.apache.spark.SparkContext@594965c9
+
+  scala> spark
+  res1: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@35599228
+
   scala> val x = spark.read.textFile("README.md")
   x: org.apache.spark.sql.Dataset[String] = [value: string]
   
@@ -99,20 +144,36 @@
 
 * Spark shell in Python
     + If Spark is installed as binaries, then
+        * Run without a cluster
 
-      ```bash
-      sudo ln -s /usr/bin/python3 ~/.local/bin/python  # Optional
-      cd "${SPARK_DIR}"
-      "${SPARK_DIR}"/bin/pyspark
-      ```
+          ```bash
+          bash "${SPARK_DIR}"/bin/pyspark
+          ```
+
+        * Or run on a cluster
+
+          ```bash
+          bash "${SPARK_DIR}"/bin/pyspark --master <cluster-master-url>
+          ```
 
     + If Spark is installed as PySpark from PyPI, then
+        * Run without a cluster
 
-      ```bash
-      pyspark
-      ```
+          ```bash
+          pyspark
+          ```
+
+        * Or run on a cluster
+
+          ```bash
+          pyspark --master <cluster-master-url>
+          ```
 
   ```pycon
+  >>> sc
+  <SparkContext master=local[*] appName=PySparkShell>
+  >>> spark
+  <pyspark.sql.session.SparkSession object at 0x7f90d4a6a320>
   >>> x = spark.read.text('README.md')
   >>> x
   DataFrame[value: string]
@@ -155,13 +216,13 @@ Kubernetes) to acquires executors on nodes in the cluster, then sends
 application code and schedule tasks to the executors to run:
 
 ```bash
-"${SPARK_DIR}"/bin/spark-submit \
+bash "${SPARK_DIR}"/bin/spark-submit \
     --class <main-class> \
     --master <cluster-master-url> \
     --deploy-mode <client/cluster> \
     --conf <key>=<value> \
     --packages <maven-coordinates> \
-    <application-jar/py> [application-arguments]
+    <xxx.jar/xxx.py> [application-arguments]
 ```
 
 where
@@ -178,21 +239,14 @@ where
 * `<maven-coordinates>`: A comma-delimited list of Maven coordinates.
 
 
-### Run Spark Application Interactively ###
+If the Spark application is written in Python and PySpark is
+pip-installed, then it can be also run with the Python interpreter.
+**NOTE** The cluster needs to be configured properly in the Python
+code
 
-To run an interactive Spark shell on a cluster:
-* Scala
-
-  ```bash
-  "${SPARK_DIR}"/bin/spark-shell --master <cluster-master-url>
-
-  ```
-
-* Python
-
-  ```bash
-  "${SPARK_DIR}"/bin/pyspark --master <cluster-master-url>
-  ```
+```bash
+python xxx.py
+```
 
 
 ### Setup Spark's Own Standalone Cluster ###
@@ -205,7 +259,7 @@ To setup a Spark standalone cluster:
   1. Start a master:
   
      ```bash
-     "${SPARK_DIR}"/sbin/start-master.sh
+     bash "${SPARK_DIR}"/sbin/start-master.sh
      ```
      
      It will output a `<master-spark-url>` like `spark://HOST:PORT`.
@@ -213,7 +267,7 @@ To setup a Spark standalone cluster:
   1. Start workers and connect them to the master above:
   
      ```bash
-     "${SPARK_DIR}"/sbin/start-slave.sh <master-spark-url>
+     bash "${SPARK_DIR}"/sbin/start-slave.sh <master-spark-url>
      ```
 
 * Or use cluster launch scripts
@@ -225,7 +279,7 @@ To setup a Spark standalone cluster:
   
      ```bash
      # Run the command below on the master instead of local machine
-     "${SPARK_DIR}"/sbin/start-all.sh
+     bash "${SPARK_DIR}"/sbin/start-all.sh
      ```
 
 ## Spark Configuration ##
