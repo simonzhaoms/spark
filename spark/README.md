@@ -242,10 +242,19 @@ where
 If the Spark application is written in Python and PySpark is
 pip-installed, then it can be also run with the Python interpreter.
 **NOTE** The cluster needs to be configured properly in the Python
-code.
+code (the `xxx.py` file in the example below).
 
 ```bash
 python xxx.py
+```
+
+### Run Spark on Hadoop Yarn cluster ###
+
+First, setup a Hadoop Yarn cluster.  See
+[Hadoop](../hadoop/README.md).  Then
+
+```bash
+
 ```
 
 
@@ -286,18 +295,29 @@ To setup a Spark standalone cluster:
 
 [Spark
 properties](https://spark.apache.org/docs/latest/configuration.html#spark-properties)
-can be set via `SparkConf` programmatically, flags passed to
-`spark-submit`/`spark-shell` or options in the
-`conf/spark-defaults.conf` file with precedence from highest to
-lowest.  Some properties may not be affected programmatically via
-`SparkConf` in runtime, since they are related to deploy, such as
+can be set via the options below with precedence from highest to
+lowest:
+* `SparkConf` programmatically
+* flags passed to `spark-submit`/`spark-shell`
+* or options in the `${SPARK_HOME}/conf/spark-defaults.conf` file
+
+Here `${SPARK_HOME}` is the same as `${SPARK_DIR}`.  If using PySpark,
+`${SPARK_HOME}` is where it is installed.
+
+Some properties may not be affected programmatically via `SparkConf`
+in runtime, since they are related to deploy, such as
 `spark.driver.memory`.
 
 Besides using the default system Java and Python, Spark can also use
 specified ones via [environment
 variables](https://spark.apache.org/docs/latest/configuration.html#environment-variables)
-set in the `conf/spark-env.sh` file, such as `JAVA_HOME` and
-`PYSPARK_PYTHON`.
+set in the `${SPARK_HOME}/conf/spark-env.sh` file, such as `JAVA_HOME`
+and `PYSPARK_PYTHON`, `HADOOP_CONF_DIR`.
+
+
+See also [Allow specifying `HADOOP_CONF_DIR` as spark
+property](https://github.com/apache/spark/pull/22289) for why not have
+`HADOOP_CONF_DIR` as a property.
 
 
 ## Reference ##
@@ -315,3 +335,5 @@ set in the `conf/spark-env.sh` file, such as `JAVA_HOME` and
     + [Useful Developer Tools](https://spark.apache.org/developer-tools.html)
 * Testing
     * [Testing PySpark Code](https://mungingdata.com/pyspark/testing-pytest-chispa/)
+* Spark with Hadoop Yarn
+    * [Spark step-by-step setup on Hadoop Yarn cluster](https://sparkbyexamples.com/hadoop/spark-setup-on-yarn/)

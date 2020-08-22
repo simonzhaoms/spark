@@ -117,8 +117,11 @@ XML files:
 ```bash
 # Setup environment variables
 cd ~/
-HADOOP_PREFIX=~/hadoop
-HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+cat << EOF >> ~/.bashrc
+export HADOOP_PREFIX=~/hadoop
+export HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+EOF
+source ~/.bashrc
 
 # Setup phraseless ssh.
 # Make sure all nodes has the same `~/.ssh/authorized_keys` file.
