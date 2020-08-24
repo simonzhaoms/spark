@@ -360,3 +360,6 @@ property](https://github.com/apache/spark/pull/22289) for why not have
     * [Testing PySpark Code](https://mungingdata.com/pyspark/testing-pytest-chispa/)
 * Spark with Hadoop Yarn
     * [Spark step-by-step setup on Hadoop Yarn cluster](https://sparkbyexamples.com/hadoop/spark-setup-on-yarn/)
+    * [Install, Configure, and Run Spark on Top of a Hadoop YARN Cluster](https://www.linode.com/docs/databases/hadoop/install-configure-run-spark-on-top-of-hadoop-yarn-cluster/)
+* [Awesome Spark](https://github.com/awesome-spark/awesome-spark)
+* [Spark with Python](https://github.com/tirthajyoti/Spark-with-Python)
