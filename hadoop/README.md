@@ -178,6 +178,10 @@ cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/core-site.x
     </property>
 EOF
 
+# Usually virtual memory will exceed pyshical memory.  That's why we need to set
+# a bigger yarn.nodemanager.vmem-pmem-ratio or disable
+# yarn.nodemanager.vmem-check-enabled or yarn.nodemanager.pmem-check-enabled.
+# See also https://issues.apache.org/jira/browse/YARN-4714
 RESOURCEMANAGER_IP=172.16.4.4
 cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/yarn-site.xml
     <property>
@@ -187,6 +191,18 @@ cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/yarn-site.x
     <property>
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-pmem-ratio</name>
+        <value>5</value>
     </property>
 EOF
 

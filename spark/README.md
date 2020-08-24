@@ -259,6 +259,25 @@ ln -s /usr/bin/python3 ~/.local/bin/python
 sudo apt install -y python3-pip
 pip3 install pyspark
 
+# If HADOOP_CONF_DIR is not set, then
+HADOOP_HOME=~/hadoop
+cat << EOF >> $(pip3 show pyspark | grep 'Location' | cut -d' ' -f 2)/pyspark/conf/spark-defaults.conf
+export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
+EOF
+
+cat << EOF > test.py
+from pyspark.sql import SparkSession
+
+file = 'README.txt'
+spark = SparkSession.builder..master('yarn').appName('Test').getOrCreate()
+text = spark.read.text(file).cache()
+print(text.count())
+spark.stop()
+EOF
+
+# Or
+#     spark-submit --master yarn test.py
+python test.py
 ```
 
 
