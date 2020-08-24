@@ -118,7 +118,8 @@ XML files:
 # Setup environment variables
 cd ~/
 cat << EOF >> ~/.bashrc
-export HADOOP_PREFIX=~/hadoop
+export HADOOP_PREFIX=~/hadoop  # Hadoop version 2.7.4
+export HADOOP_HOME=~/hadoop    # Latest version of Hadoop uses HADOOP_HOME instead of HADOOP_PREFIX
 export HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
 EOF
 source ~/.bashrc
@@ -148,6 +149,18 @@ rm hadoop.tar.gz
 #     $ ./hadoop/bin/hadoop
 sudo apt-get install -y openjdk-8-jdk
 sed -i 's@^export JAVA_HOME=.*@export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64@' hadoop/etc/hadoop/hadoop-env.sh
+
+DFS_TMP_DIR=/home/simon/dfs
+cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/hdfs-site.xml
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>${DFS_TMP_DIR}/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>${DFS_TMP_DIR}/data</value>
+    </property>
+EOF
 
 # Configure Hadoop
 NAMENODE_IP=172.16.4.4
@@ -188,6 +201,7 @@ cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/mapred-site
 EOF
 
 # Specify worker nodes
+# NOTE: The newest version uses etc/hadoop/workers instead of etc/hadoop/slaves
 cat << EOF > hadoop/etc/hadoop/slaves
 172.16.4.4
 172.16.4.5

@@ -254,6 +254,10 @@ First, setup a Hadoop Yarn cluster.  See
 [Hadoop](../hadoop/README.md).  Then
 
 ```bash
+mkdir -p .local/bin
+ln -s /usr/bin/python3 ~/.local/bin/python
+sudo apt install -y python3-pip
+pip3 install pyspark
 
 ```
 
