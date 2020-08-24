@@ -115,12 +115,18 @@ XML files:
 
 
 ```bash
-# Setup environment variables
+# Setup environment variables.
+# Let Hadoop script know where all the stuffs are located if the paths
+# are different on different nodes.
+# Seems that it will try to figure out these paths if not set.
+# However, once set, it won't try to figure out these paths by itself.
+# So 
 cd ~/
 cat << EOF >> ~/.bashrc
 export HADOOP_PREFIX=~/hadoop  # Hadoop version 2.7.4
 export HADOOP_HOME=~/hadoop    # Latest version of Hadoop uses HADOOP_HOME instead of HADOOP_PREFIX
-export HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+export HADOOP_CONF_DIR=\${HADOOP_PREFIX}/etc/hadoop
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 EOF
 source ~/.bashrc
 
@@ -148,6 +154,7 @@ rm hadoop.tar.gz
 # Setup Java.  Check:
 #     $ ./hadoop/bin/hadoop
 sudo apt-get install -y openjdk-8-jdk
+# Run the command below if JAVA_HOME is not set previously
 sed -i 's@^export JAVA_HOME=.*@export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64@' hadoop/etc/hadoop/hadoop-env.sh
 
 DFS_TMP_DIR=/home/simon/dfs
@@ -200,7 +207,8 @@ cat <<EOF | sed -i '/<configuration>/r /dev/stdin' hadoop/etc/hadoop/mapred-site
     </property>
 EOF
 
-# Specify worker nodes
+# Specify worker nodes.
+# Only needs to be set on the namenode.
 # NOTE: The newest version uses etc/hadoop/workers instead of etc/hadoop/slaves
 cat << EOF > hadoop/etc/hadoop/slaves
 172.16.4.4
@@ -213,6 +221,20 @@ EOF
 ./hadoop/sbin/start-dfs.sh
 ./hadoop/sbin/start-yarn.sh
 ./hadoop/sbin/mr-jobhistory-daemon.sh start historyserver
+
+# Check all daemons are running.
+# Make sure NameNode, ResourceManager, DataNode, NodeManager are running on
+# corresponding nodes.
+# If DataNode is not running, stop all daemons, remove DFS_TMP_DIR, format namenode,
+# then start all daemons again.
+jps
+
+# Run an example to check if Hadoop cluster is ready
+./hadoop/bin/hdfs dfs -mkdir -p /user/simon
+./hadoop/bin/hdfs dfs -put hadoop/README.txt .
+./hadoop/bin/hdfs dfs -ls
+./hadoop/bin/yarn jar ~/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.4.jar wordcount "./*" output
+./hadoop/bin/hdfs dfs -cat output/part-r-00000
 
 # Web Interfaces
 firefox http://${NAMENODE_IP}:50070 &
@@ -229,9 +251,13 @@ firefox http://${JOBHISTORY_IP}:19888 &
 ## Reference ##
 
 * [Hadoop Documentation](https://hadoop.apache.org/docs/stable/)
-    + [Getting Started -- Hadoop: Setting up a Single Node Cluster](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
-    + [Hadoop Cluster Setup](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html)
+    + [Hadoop: Setting up a Single Node Cluster (Latest Version)](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
+    + [Hadoop: Setting up a Single Node Cluster (Version 2.7.4)](https://hadoop.apache.org/docs/r2.7.4/hadoop-project-dist/hadoop-common/SingleCluster.html)
+    + [Hadoop Cluster Setup (Latest Version)](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html)
+    + [Hadoop Cluster Setup (Version 2.7.4)](https://hadoop.apache.org/docs/r2.7.4/hadoop-project-dist/hadoop-common/ClusterSetup.html)
 * [Hadoop Dev Dockerfile](https://github.com/apache/hadoop/tree/trunk/dev-support/docker)
-* [How To Install Hadoop On Ubuntu 18.04 Or 20.04](https://phoenixnap.com/kb/install-hadoop-ubuntu)
-* [Apache Hadoop 3.x installation on Ubuntu (multi node cluster)](https://sparkbyexamples.com/hadoop/apache-hadoop-installation/)
-* [Yarn setup on Hadoop 3.1](https://sparkbyexamples.com/hadoop/yarn-setup-and-run-map-reduce-program/)
+* Other Hadoop Cluster Setup Tutorials
+    + [How To Install Hadoop On Ubuntu 18.04 Or 20.04](https://phoenixnap.com/kb/install-hadoop-ubuntu)
+    + [Apache Hadoop 3.x installation on Ubuntu (multi node cluster)](https://sparkbyexamples.com/hadoop/apache-hadoop-installation/)
+        - [Yarn setup on Hadoop 3.1](https://sparkbyexamples.com/hadoop/yarn-setup-and-run-map-reduce-program/)
+    + [How to Install and Set Up a 3-Node Hadoop Cluster](https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/)
